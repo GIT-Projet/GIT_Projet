@@ -1,1 +1,1 @@
-Tutoriel de la prévision de du projet 
+Tutoriel de la prévision du projet 
