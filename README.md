@@ -1,1 +1,1 @@
-Tutoriel de la prévision du projet 
+Voici notre projet Git !!!
