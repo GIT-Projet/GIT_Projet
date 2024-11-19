@@ -17,7 +17,7 @@ body {
     padding: 20px 30px;
     border-radius: 8px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    max-width: 400px;
+    max-width: 450px;
     width: 100%;
     text-align: center;
 }
@@ -34,14 +34,16 @@ label {
     display: block;
     margin-bottom: 8px;
     font-weight: bold;
+    text-align: left;
 }
 
 /* Champs de saisie */
 input[type="text"],
-input[type="password"] {
+input[type="password"],
+input[type="email"] {
     width: 100%;
     padding: 10px;
-    margin-bottom: 20px;
+    margin-bottom: 15px;
     border: 1px solid #ccc;
     border-radius: 4px;
     font-size: 1em;
@@ -51,7 +53,8 @@ input[type="password"] {
 }
 
 input[type="text"]:focus,
-input[type="password"]:focus {
+input[type="password"]:focus,
+input[type="email"]:focus {
     border-color: #007bff;
     outline: none;
 }
@@ -72,6 +75,11 @@ button[type="submit"]:hover {
     background-color: #0056b3;
 }
 
+/* Style pour les champs obligatoires */
+input[required] {
+    border-left: 4px solid #007bff;
+}
+
 /* Responsive design */
 @media (max-width: 500px) {
     .form-container {
@@ -80,6 +88,7 @@ button[type="submit"]:hover {
 
     input[type="text"],
     input[type="password"],
+    input[type="email"],
     button[type="submit"] {
         font-size: 0.9em;
     }
