@@ -4,10 +4,10 @@ services:
   apache:
     build:
       context: .
-      dockerfile: ./backend/config/Dockerfile
+      dockerfile: ./backend/Dockerfile
     volumes:
-      - ./backend:/var/www/html/backend
-      - ./frontend:/var/www/html/frontend
+      - ../backend:/var/www/html/backend
+      - ../frontend:/var/www/html/frontend
     ports:
       - "8080:80"
     networks:
