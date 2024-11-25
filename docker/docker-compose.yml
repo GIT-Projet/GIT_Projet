@@ -13,18 +13,17 @@ services:
     networks:
       - app-network
 
-  db:
-    image: mysql:5.7
+ image: mysql:5.7
     container_name: mysql
     environment:
       MYSQL_ROOT_PASSWORD: root_password
-      MYSQL_DATABASE: app_database
+      MYSQL_DATABASE: my_databases
       MYSQL_USER: app_user
       MYSQL_PASSWORD: app_password
-    volumes:
-      - db_data:/var/lib/mysql
     ports:
       - "3306:3306"
+    volumes:
+      - ./database/schema.sql:/docker-entrypoint-initdb.d/schema.sql
     networks:
       - app-network
 
