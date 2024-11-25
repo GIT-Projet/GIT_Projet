@@ -1,11 +1,12 @@
--- Créer la base de données
-CREATE DATABASE IF NOT EXISTS databases;
-USE databases;
+CREATE DATABASE IF NOT EXISTS my_databases;
+USE my_databases;
 
 -- Table principale : Utilisateurs
 CREATE TABLE IF NOT EXISTS UserAccounts (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    username VARCHAR(50) NOT NULL UNIQUE,
+    fullname VARCHAR(100) NOT NULL,
+    email VARCHAR(100) NOT NULL ,
+    username VARCHAR(50) NOT NULL ,
     password VARCHAR(255) NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
