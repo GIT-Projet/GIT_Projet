@@ -1,4 +1,6 @@
 <?php
+
+
 // Inclure la configuration de la base de données
 require_once '../config/config.php';
 
@@ -30,7 +32,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Vérifier si l'utilisateur existe et que le mot de passe correspond
     if ($hashed_password && password_verify($password, $hashed_password)) {
-        echo "Connexion réussie ! Bienvenue, $username.";
+        // Stocker les informations dans la session
+        $_SESSION['username'] = $username;
+
+        // Afficher la page d'accueil après connexion
+        echo "
+        <!DOCTYPE html>
+        <html lang='fr'>
+        <head>
+            <meta charset='UTF-8'>
+            <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+            <title>Bienvenue</title>
+            <link rel='stylesheet' href='style.css'> <!-- Assurez-vous que style.css existe -->
+        </head>
+        <body>
+            <div class='container'>
+                <h1>Bienvenue, $username</h1>
+                <p>Vous êtes maintenant connecté.</p>
+                <a href='logout.php' class='logout-btn'>Se déconnecter</a>
+            </div>
+        </body>
+        </html>";
     } else {
         echo "Nom d'utilisateur ou mot de passe incorrect.";
     }
@@ -42,3 +64,4 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     die("Méthode HTTP non autorisée.");
 }
 ?>
+
