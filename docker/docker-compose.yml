@@ -1,15 +1,17 @@
 services:
   php:
     build:
-      context: "C:/Users/Hervensson/SAE502/GIT_Projet"
+      context: .
       dockerfile: ./backend/Dockerfile
     container_name: php_app
     volumes:
-      - C:/Users/Hervensson/SAE502/GIT_Projet:/var/www/html
+      - ./backend:/var/www/html/backend
+      - ./frontend:/var/www/html/frontend
+      - ./config:/var/www/html/config
     ports:
       - "8080:80"
     environment:
-    - APACHE_DOCUMENT_ROOT=/var/www/html
+      - APACHE_DOCUMENT_ROOT=/var/www/html
 
     depends_on:
       - db
@@ -24,7 +26,7 @@ services:
     ports:
       - "3306:3306"
     volumes:
-      - C:/Users/Hervensson/SAE502/GIT_Projet/database:/docker-entrypoint-initdb.d
+      - ./database:/docker-entrypoint-initdb.d
     networks:
       - app-network
 
