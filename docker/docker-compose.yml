@@ -1,18 +1,17 @@
+version: '3.8'
+
 services:
   php:
     build:
-      context: .
-      dockerfile: ./backend/Dockerfile
+      context: ../  # Contexte à partir du répertoire parent de "docker"
+      dockerfile: backend/Dockerfile
     container_name: php_app
     volumes:
-      - ./backend:/var/www/html/backend
-      - ./frontend:/var/www/html/frontend
-      - ./config:/var/www/html/backend/config
+      - ../:/var/www/html  # Volume monté à partir du répertoire parent
     ports:
       - "8080:80"
     environment:
       - APACHE_DOCUMENT_ROOT=/var/www/html
-
     depends_on:
       - db
     networks:
@@ -26,7 +25,7 @@ services:
     ports:
       - "3306:3306"
     volumes:
-      - ./database:/docker-entrypoint-initdb.d
+      - ../database:/docker-entrypoint-initdb.d  # Volume pour la base de données
     networks:
       - app-network
 
