@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Bienvenue sur notre site</title>
+    <style>
+        body {
+            font-family: 'Roboto', Arial, sans-serif;
+            background: linear-gradient(to bottom right, #6a11cb, #2575fc);
+            color: #ffffff;
+            text-align: center;
+            padding: 5% 10%;
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-attachment: fixed;
+            background-position: center;
+            background-size: cover;
+        }
+        .container {
+            max-width: 1200px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 2em;
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 15px;
+            animation: fadeIn 1s ease-out;
+        }
+        h1 {
+            font-size: 4em;
+            text-shadow: 4px 4px 10px rgba(0, 0, 0, 0.7);
+            margin-bottom: 20px;
+            animation: fadeInText 2s ease-out;
+        }
+        p {
+            font-size: 1.8em;
+            line-height: 1.6;
+            margin-top: 20px;
+            opacity: 0;
+            animation: fadeInText 2s ease-out 0.5s forwards;
+        }
+        .cta-button {
+            margin-top: 40px;
+            padding: 15px 40px;
+            background-color: #3498db;
+            color: #ffffff;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.5em;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            opacity: 0;
+            animation: fadeInText 2s ease-out 1s forwards;
+        }
+        .cta-button:hover {
+            background-color: #2980b9;
+            transform: translateY(-3px);
+            box-shadow: 0 15px 25px rgba(0, 0, 0, 0.4);
+        }
+        @keyframes fadeIn {
+            0% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+        @keyframes fadeInText {
+            0% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+        /* Style responsive */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 3em;
+            }
+            p {
+                font-size: 1.4em;
+            }
+            .cta-button {
+                font-size: 1.2em;
+                padding: 12px 30px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Bienvenue sur notre site !</h1>
+        <p>Nous sommes ravis de vous accueillir dans notre espace digital. Ici, chaque visite est une aventure et chaque clic vous ouvre la porte à de nouvelles opportunités.</p>
+        <p>Rejoignez notre communauté passionnée, échangez, apprenez, et faites partie de quelque chose de vraiment spécial. Ensemble, faisons un pas vers l'avenir !</p>
+        <form action="/backend/auth/logout.php" method="POST" style="display: inline;">
+            <button type="submit" class="cta-button">Se déconnecter</button>
+        </form>
+    </div>
+</body>
+</html>

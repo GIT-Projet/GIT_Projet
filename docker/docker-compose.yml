@@ -1,0 +1,47 @@
+services:
+  php:
+    build:
+      context: "C:/Users/Hervensson/SAE502/GIT_Projet"
+      dockerfile: ./backend/Dockerfile
+    container_name: php_app
+    volumes:
+      - C:/Users/Hervensson/SAE502/GIT_Projet:/var/www/html
+    ports:
+      - "8080:80"
+    environment:
+    - APACHE_DOCUMENT_ROOT=/var/www/html
+
+    depends_on:
+      - db
+    networks:
+      - app-network
+
+  db:
+    image: mysql:8.0
+    container_name: db
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+    ports:
+      - "3306:3306"
+    volumes:
+      - C:/Users/Hervensson/SAE502/GIT_Projet/database:/docker-entrypoint-initdb.d
+    networks:
+      - app-network
+
+  phpmyadmin:
+    image: phpmyadmin:latest
+    container_name: phpmyadmin
+    environment:
+      PMA_HOST: db
+      PMA_USER: root
+      PMA_PASSWORD: rootpassword
+    ports:
+      - "8081:80"
+    depends_on:
+      - db
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
