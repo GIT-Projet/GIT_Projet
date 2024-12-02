@@ -1,17 +1,32 @@
 <?php
-// Inclure la configuration de la base de données
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
+// Démarrer la session en haut du fichier
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
 require_once '../config/config.php';
 
 // Vérifier que la méthode HTTP est POST
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Récupérer les données du formulaire
+    $fullname = trim($_POST['fullname']);
+    $email = trim($_POST['email']);
     $username = trim($_POST['username']);
     $password = $_POST['password'];
     $confirm_password = $_POST['confirm_password'];
 
     // Vérification des champs obligatoires
-    if (empty($username) || empty($password) || empty($confirm_password)) {
+    if (empty($fullname) || empty($email) || empty($username) || empty($password) || empty($confirm_password)) {
         die("Veuillez remplir tous les champs.");
+    }
+
+    // Vérification de la validité de l'adresse e-mail
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        die("Adresse e-mail invalide.");
     }
 
     // Vérifier la correspondance des mots de passe
@@ -36,15 +51,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     // Préparer la requête SQL pour insérer un nouvel utilisateur
-    $stmt = $conn->prepare("INSERT INTO UserAccounts (username, password) VALUES (?, ?)");
-    $stmt->bind_param("ss", $username, $hashed_password);
+    $stmt = $conn->prepare("INSERT INTO UserAccounts (fullname, email, username, password) VALUES (?, ?, ?, ?)");
+    $stmt->bind_param("ssss", $fullname, $email, $username, $hashed_password);
 
     // Exécuter la requête et gérer les erreurs
     if ($stmt->execute()) {
-        echo "Inscription réussie ! Vous pouvez maintenant vous connecter.";
+        // Enregistrer l'utilisateur dans la session
+        $_SESSION['username'] = $username;
+        $_SESSION['fullname'] = $fullname;
+
+        // Redirection vers home.php
+        header("Location: /backend/auth/home.php");
+        exit();
     } else {
         if ($stmt->errno === 1062) { // Code d'erreur pour doublons
-            die("Ce nom d'utilisateur est déjà utilisé.");
+            die("Ce nom d'utilisateur ou cette adresse e-mail est déjà utilisé(e).");
         }
         die("Erreur : " . $stmt->error);
     }

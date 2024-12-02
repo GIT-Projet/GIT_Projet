@@ -1,49 +1,20 @@
 <?php
-session_start(); // Démarrer ou reprendre la session
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+session_start();
 
-// Vérifier si l'utilisateur est connecté
-if (isset($_SESSION['username'])) {
-    // Détruire toutes les données de la session
-    session_unset();  // Libérer les variables de session
-    session_destroy(); // Détruire la session
+// Vérifier si la méthode HTTP est POST
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Détruire la session pour déconnecter l'utilisateur
+    session_unset();
+    session_destroy();
+
+    // Redirection vers la page de connexion (chemin absolu)
+    header("Location: /frontend/home.html");
+    exit();
+} else {
+    echo "Méthode HTTP non autorisée.";
+    exit();
 }
-
-// Afficher le message avant la redirection
-echo "
-<!DOCTYPE html>
-<html lang='fr'>
-<head>
-    <meta charset='UTF-8'>
-    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
-    <title>Déconnexion</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f0f0f0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-        }
-        .message {
-            text-align: center;
-            background: #fff;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-        h1 {
-            color: #333;
-        }
-    </style>
-</head>
-<body>
-    <div class='message'>
-        <h1>Au revoir, à la prochaine !</h1>
-    </div>
-  
-</body>
-</html>
-";
 ?>

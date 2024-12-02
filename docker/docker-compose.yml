@@ -1,35 +1,48 @@
+version: '3.8'
 
 services:
-  apache:
+  php:
     build:
-      context: .
-      dockerfile: ../backend/Dockerfile
+      context: ../  # Contexte à partir du répertoire parent de "docker"
+      dockerfile: backend/Dockerfile
+    container_name: php_app
     volumes:
-      - ../backend:/var/www/html/backend
-      - ../frontend:/var/www/html/frontend
+      - ../:/var/www/html  # Volume monté à partir du répertoire parent
     ports:
       - "8080:80"
+    environment:
+      - APACHE_DOCUMENT_ROOT=/var/www/html
+    depends_on:
+      - db
     networks:
       - app-network
 
-  mysql:
-    image: mysql:5.7
-    container_name: mysql
+  db:
+    image: mysql:8.0
+    container_name: db
     environment:
-      MYSQL_ROOT_PASSWORD: root_password
-      MYSQL_DATABASE: my_databases
-      MYSQL_USER: app_user
-      MYSQL_PASSWORD: app_password
+      MYSQL_ROOT_PASSWORD: rootpassword
     ports:
       - "3306:3306"
     volumes:
-      - ./database/schema.sql:/docker-entrypoint-initdb.d/schema.sql
+      - ../database:/docker-entrypoint-initdb.d  # Volume pour la base de données
+    networks:
+      - app-network
+
+  phpmyadmin:
+    image: phpmyadmin:latest
+    container_name: phpmyadmin
+    environment:
+      PMA_HOST: db
+      PMA_USER: root
+      PMA_PASSWORD: rootpassword
+    ports:
+      - "8081:80"
+    depends_on:
+      - db
     networks:
       - app-network
 
 networks:
   app-network:
     driver: bridge
-
-volumes:
-  db_data:
