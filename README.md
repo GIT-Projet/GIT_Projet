@@ -15,7 +15,7 @@ GIT_Projet/
 │   │   ├── login.php
 │   │   ├── logout.php
 │   │   ├── register.php
-│   │   └── welcome.php
+│   │   └── home.php
 │   ├── config/
 │   │   ├── config.php
 │   │   └── index.php
@@ -29,7 +29,7 @@ GIT_Projet/
 │   ├── login.html
 │   ├── register.html
 │   ├── style.css
-│   └── welcome.html
+│   └── home.html
 └── README.md
 ```
 ---
