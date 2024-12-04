@@ -100,8 +100,8 @@ if (!isset($_SESSION['username'])) {
     <div class="container">
         <h1>Bienvenue, <?php echo htmlspecialchars($_SESSION['username']); ?> !</h1>
         <p>Nous sommes heureux de vous accueillir. Explorez les nombreuses fonctionnalités de notre site et faites partie de notre communauté !</p>
-        <form action="/backend/auth/logout.php" method="POST" style="display: inline;">
-    <button type="submit" class="cta-button">Se déconnecter</button>
+        <form action="/frontend/home.html" method="POST" style="display: inline;">
+    <button type="submit" class="cta-button">Accueil</button>
         </form>
     </div>
 </body>
