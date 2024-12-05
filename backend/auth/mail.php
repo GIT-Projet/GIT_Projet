@@ -24,7 +24,7 @@ function sendConfirmationEmail($email, $fullname, $activation_token) {
         $mail->addAddress($email, $fullname);  // L'email et le nom du destinataire
 
         // Contenu de l'email
-        $activation_link = "http://localhost/activate.php?token=" . urlencode($activation_token);  // Lien d'activation a modifier si c pas le bon
+        $activation_link = "http://localhost:8080//activate.php?token=" . urlencode($activation_token);  // Lien d'activation a modifier si c pas le bon
         $mail->isHTML(true);  // Spécifier que l'email sera en HTML
         $mail->Subject = 'Confirmation de votre inscription';  // Sujet de l'email
         $mail->Body    = "
