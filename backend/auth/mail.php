@@ -14,8 +14,8 @@ function sendConfirmationEmail($email, $fullname, $activation_token) {
         $mail->isSMTP();  // Utiliser SMTP pour l'envoi d'email
         $mail->Host = 'smtp.gmail.com';  // Hôte SMTP de Gmail
         $mail->SMTPAuth = true;          // Activer l'authentification SMTP
-        $mail->Username = 'votre-email@gmail.com';  // Remplacer par votre adresse email Gmail
-        $mail->Password = 'votre-mot-de-passe';     // Utiliser un mot de passe d'application si l'authentification 2FA est activée
+        $mail->Username = 'siyadiarra@gmail.com';  // Remplacer par votre adresse email Gmail
+        $mail->Password = 'Siyadiarra2003*';     // Utiliser un mot de passe d'application si l'authentification 2FA est activée
         $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;  // Sécurisation de la connexion
         $mail->Port = 587;  // Port SMTP pour Gmail (587 pour TLS)
 
