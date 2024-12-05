@@ -4,6 +4,9 @@ require '../../PHPMailer/PHPMailer-master/src/PHPMailer.php';
 require '../../PHPMailer/PHPMailer-master/src/SMTP.php';
 require '../../PHPMailer/PHPMailer-master/src/Exception.php';
 
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+
 // Fonction pour envoyer un email de confirmation
 function sendConfirmationEmail($email, $fullname, $activation_token) {
     // Création de l'objet PHPMailer
