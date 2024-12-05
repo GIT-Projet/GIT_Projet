@@ -20,11 +20,11 @@ function sendConfirmationEmail($email, $fullname, $activation_token) {
         $mail->Port = 587;  // Port SMTP pour Gmail (587 pour TLS)
 
         // Expéditeur et destinataire
-        $mail->setFrom('siyadiarra@gmail.com', 'SAE502);  // L'email de l'expéditeur
+        $mail->setFrom('siyadiarra@gmail.com', 'SAE502');  // L'email de l'expéditeur
         $mail->addAddress($email, $fullname);  // L'email et le nom du destinataire
 
         // Contenu de l'email
-        $activation_link = "http://localhost:8080//activate.php?token=" . urlencode($activation_token);  // Lien d'activation a modifier si c pas le bon
+        $activation_link = "http://localhost:8080/activate.php?token=" . urlencode($activation_token);  // Lien d'activation a modifier si c pas le bon
         $mail->isHTML(true);  // Spécifier que l'email sera en HTML
         $mail->Subject = 'Confirmation de votre inscription';  // Sujet de l'email
         $mail->Body    = "
