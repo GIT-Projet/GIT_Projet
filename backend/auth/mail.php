@@ -1,8 +1,8 @@
 <?php
 // Inclure PHPMailer à partir du dossier où vous l'avez placé dans votre projet
-require '../../PHPMailer/PHPMailer-master/src/PHPMailer.php';
-require '../../PHPMailer/PHPMailer-master/src/SMTP.php';
-require '../../PHPMailer/PHPMailer-master/src/Exception.php';
+require '../PHPMailer/PHPMailer-master/src/PHPMailer.php';
+require '../PHPMailer/PHPMailer-master/src/SMTP.php';
+require '../PHPMailer/PHPMailer-master/src/Exception.php';
 
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
