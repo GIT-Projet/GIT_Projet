@@ -11,7 +11,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     session_destroy();
 
     // Redirection vers la page de connexion (chemin absolu)
-    header("Location: /frontend/home.html");
+    header("Location: /frontend/login.html");
     exit();
 } else {
     echo "Méthode HTTP non autorisée.";

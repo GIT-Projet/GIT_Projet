@@ -61,7 +61,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $_SESSION['fullname'] = $fullname;
 
         // Redirection vers home.php
-        header("Location: /backend/auth/home.php");
+        header("Location: /frontend/login.html");
         exit();
     } else {
         if ($stmt->errno === 1062) { // Code d'erreur pour doublons

@@ -41,7 +41,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $_SESSION['username'] = $username;
 
         // Rediriger vers la page d'accueil après connexion
-        header("Location: ../frontend/home.html");
+        header("Location: /backend/auth/home.php");
         exit();
     } else {
         echo "Nom d'utilisateur ou mot de passe incorrect.";
