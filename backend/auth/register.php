@@ -10,7 +10,7 @@ if (session_status() === PHP_SESSION_NONE) {
 
 require_once '../config/config.php';
 // Inclure le fichier mail.php contenant la fonction d'envoi de mail
-require_once '../auth/mail.php';  //  chemin pour mail.php
+require_once '../backend/auth/mail.php';  //  chemin pour mail.php
 
 // Vérifier que la méthode HTTP est POST
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
