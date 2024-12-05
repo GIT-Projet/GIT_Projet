@@ -1,8 +1,8 @@
 <?php
 // Inclure PHPMailer à partir du dossier où vous l'avez placé dans votre projet
-require 'PHPMailer/src/PHPMailer.php';
-require 'PHPMailer/src/SMTP.php';
-require 'PHPMailer/src/Exception.php';
+require '../PHPMailer/PHPMailer-master/src/PHPMailer.php';
+require '../PHPMailer/PHPMailer-master/src/SMTP.php';
+require '../PHPMailer/PHPMailer-master/src/Exception.php';
 
 // Fonction pour envoyer un email de confirmation
 function sendConfirmationEmail($email, $fullname, $activation_token) {
