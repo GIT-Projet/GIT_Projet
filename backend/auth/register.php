@@ -9,6 +9,8 @@ if (session_status() === PHP_SESSION_NONE) {
 }
 
 require_once '../config/config.php';
+// Inclure le fichier mail.php contenant la fonction d'envoi de mail
+require_once '../auth/mail.php';  //  chemin pour mail.php
 
 // Vérifier que la méthode HTTP est POST
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -50,9 +52,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         die("Erreur de connexion : " . $conn->connect_error);
     }
 
+    // Générer un token d'activation unique
+    $activation_token = bin2hex(random_bytes(16));  // Token unique
+
     // Préparer la requête SQL pour insérer un nouvel utilisateur
-    $stmt = $conn->prepare("INSERT INTO UserAccounts (fullname, email, username, password) VALUES (?, ?, ?, ?)");
-    $stmt->bind_param("ssss", $fullname, $email, $username, $hashed_password);
+    $stmt = $conn->prepare("INSERT INTO UserAccounts (fullname, email, username, password, activation_token) VALUES (?, ?, ?, ?, ?)");
+    $stmt->bind_param("sssss", $fullname, $email, $username, $hashed_password, $activation_token);
 
     // Exécuter la requête et gérer les erreurs
     if ($stmt->execute()) {
@@ -60,7 +65,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $_SESSION['username'] = $username;
         $_SESSION['fullname'] = $fullname;
 
-        // Redirection vers home.php
+        // Appeler la fonction pour envoyer l'email de confirmation
+        sendConfirmationEmail($email, $fullname, $activation_token);
+
+        // Redirection vers home.php ou une page de confirmation
         header("Location: /backend/auth/home.php");
         exit();
     } else {
