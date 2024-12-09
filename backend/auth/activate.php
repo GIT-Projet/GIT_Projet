@@ -4,7 +4,7 @@ session_start();
 
 // Inclure la configuration de la base de données
 require_once '../config/config.php'; //  chemin de fichier de configuration
-
+require_once 'mail.php'
 // Vérifier si le token est passé en paramètre via GET
 if (isset($_GET['token']) && !empty($_GET['token'])) {
     // Récupérer le token
