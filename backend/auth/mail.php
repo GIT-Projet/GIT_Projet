@@ -14,7 +14,7 @@ function sendConfirmationEmail($email, $fullname, $activation_token) {
         $mail->Host = 'smtp.gmail.com';
         $mail->SMTPAuth = true;
         $mail->Username = 'siyadiarra@gmail.com'; // Remplacez par votre adresse email
-        $mail->Password = 'Siyadiarra2003*'; // Remplacez par votre mot de passe d'application
+        $mail->Password = 'rcer olhr ktbw biih'; // Remplacez par votre mot de passe d'application
         $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
         $mail->Port = 587;
 
