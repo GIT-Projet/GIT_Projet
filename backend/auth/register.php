@@ -66,4 +66,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     die("Méthode HTTP non autorisée.");
 }
 ?>
-
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Page avec fond bleu</title>
+    <style>
+        /* Styles généraux */
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(to bottom right, #0077b6, #004f7c); /* Dégradé bleu clair à bleu foncé */
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <!-- Le contenu de la page est vide, seule la couleur de fond est visible -->
+</body>
+</html>
