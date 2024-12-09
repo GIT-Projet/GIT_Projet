@@ -3,15 +3,15 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
-// Démarrer la session en haut du fichier
+ob_start(); // Démarrer la mise en tampon de sortie pour éviter l'erreur "headers already sent"
+
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
 require_once '../config/config.php';
-require_once 'mail.php'; // Inclure le fichier contenant la fonction sendConfirmationEmail
+require_once 'mail.php'; // Inclure le fichier contenant la fonction d'envoi d'email
 
-// Vérifier que la méthode HTTP est POST
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Récupérer les données du formulaire
     $fullname = trim($_POST['fullname']);
@@ -43,7 +43,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Hashage du mot de passe
     $hashed_password = password_hash($password, PASSWORD_BCRYPT);
 
-    // Générer un jeton d'activation unique
+    // Génération d'un token d'activation unique
     $activation_token = bin2hex(random_bytes(16));
 
     // Connexion à la base de données
@@ -58,16 +58,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $stmt = $conn->prepare("INSERT INTO UserAccounts (fullname, email, username, password, activation_token) VALUES (?, ?, ?, ?, ?)");
     $stmt->bind_param("sssss", $fullname, $email, $username, $hashed_password, $activation_token);
 
-    // Exécuter la requête et gérer les erreurs
     if ($stmt->execute()) {
-        // Appeler la fonction pour envoyer l'email de confirmation
+        // Envoi d'un email de confirmation
         sendConfirmationEmail($email, $fullname, $activation_token);
 
         // Enregistrer l'utilisateur dans la session
         $_SESSION['username'] = $username;
         $_SESSION['fullname'] = $fullname;
 
-        // Redirection vers login.html
+        // Redirection vers la page de connexion
         header("Location: /frontend/login.html");
         exit();
     } else {
