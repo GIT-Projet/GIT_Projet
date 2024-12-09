@@ -17,10 +17,6 @@ function sendConfirmationEmail($email, $fullname, $activation_token) {
         $mail->Password = 'rcer olhr ktbw biih'; // Remplacez par votre mot de passe d'application
         $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
         $mail->Port = 587;
-
-        // Activer le débogage SMTP (niveau 2 pour des détails plus complets)
-        $mail->SMTPDebug = 2; // Niveau de débogage (0 = aucun, 1 = erreurs et messages, 2 = tout)
-
         // Expéditeur et destinataire
         $mail->setFrom('siyadiarra@gmail.com', 'SAE502');
         $mail->addAddress($email, $fullname);
