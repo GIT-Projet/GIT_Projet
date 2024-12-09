@@ -51,9 +51,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Aucun texte ou espace avant cette ligne
         $_SESSION['username'] = $username;
         $_SESSION['fullname'] = $fullname;
-
-        // Assurez-vous qu'il n'y a aucune sortie avant cette redirection
-        header("Location: /frontend/login.html");
+        
         exit();
     } else {
         if ($stmt->errno === 1062) {
