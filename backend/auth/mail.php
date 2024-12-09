@@ -1,55 +1,50 @@
 <?php
-// Inclure PHPMailer à partir du dossier où vous l'avez placé dans votre projet
-require 'PHPMailer-master/PHPMailer-master/src/PHPMailer.php';
-require 'PHPMailer-master/PHPMailer-master/src/SMTP.php';
-require 'PHPMailer-master/PHPMailer-master/src/Exception.php';
+// Inclure PHPMailer
+require_once __DIR__ . '/PHPMailer-master/PHPMailer-master/src/PHPMailer.php';
+require_once __DIR__ . '/PHPMailer-master/PHPMailer-master/src/SMTP.php';
+require_once __DIR__ . '/PHPMailer-master/PHPMailer-master/src/Exception.php';
+
+// Importer les classes nécessaires
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+use PHPMailer\PHPMailer\SMTP;
 
 // Fonction pour envoyer un email de confirmation
 function sendConfirmationEmail($email, $fullname, $activation_token) {
-    // Création de l'objet PHPMailer
-    $mail = new PHPMailer\PHPMailer\PHPMailer(true);  // Utiliser l'instance avec la gestion des exceptions
-
+    $mail = new PHPMailer(true); // PHPMailer avec gestion des exceptions
     try {
-        // Paramètres du serveur SMTP
-        $mail->isSMTP();  // Utiliser SMTP pour l'envoi d'email
-        $mail->Host = 'smtp.gmail.com';  // Hôte SMTP de Gmail
-        $mail->SMTPAuth = true;          // Activer l'authentification SMTP
-        $mail->Username = 'siyadiarra@gmail.com';  // Remplacer par votre adresse email Gmail
-        $mail->Password = 'Siyadiarra2003*';     // Utiliser un mot de passe d'application si l'authentification 2FA est activée
-        $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;  // Sécurisation de la connexion
-        $mail->Port = 587;  // Port SMTP pour Gmail (587 pour TLS)
+        // Paramètres SMTP
+        $mail->isSMTP();
+        $mail->Host = 'smtp.gmail.com';
+        $mail->SMTPAuth = true;
+        $mail->Username = 'siyadiarra@gmail.com';
+        $mail->Password = 'Siyadiarra2003*';
+        $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+        $mail->Port = 587;
 
         // Expéditeur et destinataire
-        $mail->setFrom('siyadiarra@gmail.com', 'SAE502');  // Email de l'expéditeur
-        $mail->addAddress($email, $fullname);  // Email et nom du destinataire
+        $mail->setFrom('siyadiarra@gmail.com', 'SAE502');
+        $mail->addAddress($email, $fullname);
 
         // Contenu de l'email
-        $activation_link = "http://localhost:8080/activate.php?token=" . urlencode($activation_token);  // Lien d'activation à modifier si nécessaire
-        $mail->isHTML(true);  // Spécifier que l'email sera en HTML
-        $mail->Subject = 'Confirmation de votre inscription';  // Sujet de l'email
-        $mail->Body    = "
+        $activation_link = "http://localhost:8080/activate.php?token=" . urlencode($activation_token);
+        $mail->isHTML(true);
+        $mail->Subject = 'Confirmation de votre inscription';
+        $mail->Body = "
             <html>
-                <head>
-                    <title>Activation de votre compte</title>
-                </head>
                 <body>
                     <p>Bonjour $fullname,</p>
-                    <p>Merci de vous être inscrit sur notre site ! Pour activer votre compte, veuillez cliquer sur le lien ci-dessous :</p>
+                    <p>Merci de vous être inscrit ! Cliquez sur le lien pour activer votre compte :</p>
                     <p><a href='$activation_link'>$activation_link</a></p>
-                    <p>Si vous n'avez pas demandé à vous inscrire, veuillez ignorer ce message.</p>
                 </body>
             </html>
         ";
 
-        // Envoi de l'email
-        if ($mail->send()) {
-            echo 'Un email de confirmation a été envoyé à votre adresse.';
-        } else {
-            echo 'L\'envoi de l\'email a échoué.';
-        }
+        // Envoi
+        $mail->send();
+        echo 'Un email de confirmation a été envoyé.';
     } catch (Exception $e) {
-        // Capture des erreurs d'envoi d'email
-        echo "Erreur d'envoi de l'email. Erreur : {$mail->ErrorInfo}";
+        echo "Erreur lors de l'envoi : {$mail->ErrorInfo}";
     }
 }
 ?>
