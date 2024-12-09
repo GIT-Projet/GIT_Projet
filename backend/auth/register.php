@@ -60,6 +60,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if ($stmt->execute()) {
         // Envoi d'un email de confirmation
+        $mail->SMTPDebug = SMTP::DEBUG_SERVER;
         sendConfirmationEmail($email, $fullname, $activation_token);
 
         // Enregistrer l'utilisateur dans la session
