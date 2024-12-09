@@ -4,7 +4,7 @@ session_start();
 
 // Inclure la configuration de la base de données
 require_once '../config/config.php'; // chemin de fichier de configuration
-require_once 'mail.php'; 
+require_once 'mail.php'; // Ajout du point-virgule ici
 
 // Vérifier si le token est passé en paramètre via GET
 if (isset($_GET['token']) && !empty($_GET['token'])) {
@@ -36,9 +36,10 @@ if (isset($_GET['token']) && !empty($_GET['token'])) {
 
         // Message de succès
         echo "<p>Votre compte a été activé avec succès ! Vous pouvez maintenant vous connecter.</p>";
-        echo '<a href="login.php"><button>Connectez-vous maintenant</button></a>';  // Bouton pour se connecter
-        
-        exit();
+
+        // Rediriger l'utilisateur vers la page de connexion
+        header("Location: login.php");  // Redirige vers la page de connexion
+        exit(); // Ne pas oublier de terminer le script après la redirection
     } else {
         // Si le token n'est pas valide
         echo "<p>Token invalide ou expiré.</p>";
