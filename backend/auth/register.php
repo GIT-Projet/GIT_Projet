@@ -60,51 +60,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if ($stmt->execute()) {
         // Envoi d'un email de confirmation
-        require 'PHPMailer-master/PHPMailer-master/src/PHPMailer.php';
-        require 'PHPMailer-master/PHPMailer-master/src/SMTP.php';
-        require 'PHPMailer-master/PHPMailer-master/src/Exception.php';
-
-        // Création de l'objet PHPMailer
-        $mail = new PHPMailer\PHPMailer\PHPMailer(true);
-
-        try {
-            // Paramètres du serveur SMTP
-            $mail->isSMTP(); 
-            $mail->Host = 'smtp.gmail.com'; 
-            $mail->SMTPAuth = true;
-            $mail->Username = 'votre-email@gmail.com'; // Remplacer par votre email
-            $mail->Password = 'votre-mot-de-passe-app'; // Utiliser un mot de passe d'application
-            $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
-            $mail->Port = 587;
-
-            // Expéditeur et destinataire
-            $mail->setFrom('votre-email@gmail.com', 'Nom de votre service');
-            $mail->addAddress($email, $fullname);
-
-            // Contenu de l'email
-            $activation_link = "http://localhost:8080/activate.php?token=" . urlencode($activation_token);
-            $mail->isHTML(true);
-            $mail->Subject = 'Confirmation de votre inscription';
-            $mail->Body = "
-                <html>
-                    <head><title>Activation de votre compte</title></head>
-                    <body>
-                        <p>Bonjour $fullname,</p>
-                        <p>Merci de vous être inscrit ! Pour activer votre compte, veuillez cliquer sur ce lien : 
-                        <a href='$activation_link'>$activation_link</a></p>
-                        <p>Si vous n'avez pas demandé l'inscription, ignorez cet email.</p>
-                    </body>
-                </html>";
-
-            // Envoi de l'email
-            if ($mail->send()) {
-                echo 'Un email de confirmation a été envoyé à votre adresse.';
-            } else {
-                echo 'L\'envoi de l\'email a échoué.';
-            }
-        } catch (Exception $e) {
-            echo "Erreur d'envoi de l'email. Erreur : {$mail->ErrorInfo}";
-        }
+        sendConfirmationEmail($email, $fullname, $activation_token);
 
         // Enregistrer l'utilisateur dans la session
         $_SESSION['username'] = $username;
