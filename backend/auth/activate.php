@@ -34,11 +34,11 @@ if (isset($_GET['token']) && !empty($_GET['token'])) {
         $stmt->bind_param("s", $token);
         $stmt->execute();
 
-        // Message de succès
-        echo "<p>Votre compte a été activé avec succès ! Vous pouvez maintenant vous connecter.</p>";
+        // Message de succès avant la redirection
+        echo "<p>Votre compte a été activé avec succès ! Vous allez être redirigé vers la page de connexion.</p>";
 
-        // Rediriger l'utilisateur vers la page de connexion
-        header("Location: login.php");  // Redirige vers la page de connexion
+        // Rediriger après 3 secondes
+        header("refresh:3;url=login.php");  // Redirige vers la page de connexion après 3 secondes
         exit(); // Ne pas oublier de terminer le script après la redirection
     } else {
         // Si le token n'est pas valide
