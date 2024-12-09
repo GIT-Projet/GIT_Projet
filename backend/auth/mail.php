@@ -22,7 +22,7 @@ function sendConfirmationEmail($email, $fullname, $activation_token) {
         $mail->addAddress($email, $fullname);
 
         // Contenu de l'email
-        $activation_link = "http://localhost:8080/activate.php?token=" . urlencode($activation_token);
+        $activation_link = "http://localhost:8080/backend/auth/activate.php?token=" . urlencode($activation_token);
         $mail->isHTML(true);
         $mail->Subject = 'Confirmation de votre inscription';
         $mail->Body = "
