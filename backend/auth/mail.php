@@ -20,7 +20,7 @@ function sendConfirmationEmail($email, $fullname, $activation_token) {
         $mail->Port = 587;  // Port SMTP pour Gmail (587 pour TLS)
 
         // Expéditeur et destinataire
-        $mail->setFrom('votre_email@gmail.com', 'Nom de l\'expéditeur');  // Email de l'expéditeur
+        $mail->setFrom('siyadiarra@gmail.com', 'SAE502');  // Email de l'expéditeur
         $mail->addAddress($email, $fullname);  // Email et nom du destinataire
 
         // Contenu de l'email
