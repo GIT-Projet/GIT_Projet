@@ -9,6 +9,7 @@ if (session_status() === PHP_SESSION_NONE) {
 }
 
 require_once '../config/config.php';
+require_once 'mail.php'; // Inclure le fichier contenant la fonction sendConfirmationEmail
 
 // Vérifier que la méthode HTTP est POST
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -42,6 +43,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Hashage du mot de passe
     $hashed_password = password_hash($password, PASSWORD_BCRYPT);
 
+    // Générer un jeton d'activation unique
+    $activation_token = bin2hex(random_bytes(16));
+
     // Connexion à la base de données
     $conn = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
 
@@ -51,16 +55,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     // Préparer la requête SQL pour insérer un nouvel utilisateur
-    $stmt = $conn->prepare("INSERT INTO UserAccounts (fullname, email, username, password) VALUES (?, ?, ?, ?)");
-    $stmt->bind_param("ssss", $fullname, $email, $username, $hashed_password);
+    $stmt = $conn->prepare("INSERT INTO UserAccounts (fullname, email, username, password, activation_token) VALUES (?, ?, ?, ?, ?)");
+    $stmt->bind_param("sssss", $fullname, $email, $username, $hashed_password, $activation_token);
 
     // Exécuter la requête et gérer les erreurs
     if ($stmt->execute()) {
+        // Appeler la fonction pour envoyer l'email de confirmation
+        sendConfirmationEmail($email, $fullname, $activation_token);
+
         // Enregistrer l'utilisateur dans la session
         $_SESSION['username'] = $username;
         $_SESSION['fullname'] = $fullname;
 
-        // Redirection vers home.php
+        // Redirection vers login.html
         header("Location: /frontend/login.html");
         exit();
     } else {
