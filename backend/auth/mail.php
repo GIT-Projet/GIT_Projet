@@ -1,8 +1,8 @@
 <?php
 // Inclure PHPMailer à partir du dossier où vous l'avez placé dans votre projet
-require 'PHPMailer/src/PHPMailer.php';
-require 'PHPMailer/src/SMTP.php';
-require 'PHPMailer/src/Exception.php';
+require 'PHPMailer-master/PHPMailer-master/src/PHPMailer.php';
+require 'PHPMailer-master/PHPMailer-master/src/SMTP.php';
+require 'PHPMailer-master/PHPMailer-master/src/Exception.php';
 
 // Fonction pour envoyer un email de confirmation
 function sendConfirmationEmail($email, $fullname, $activation_token) {
@@ -14,14 +14,14 @@ function sendConfirmationEmail($email, $fullname, $activation_token) {
         $mail->isSMTP();  // Utiliser SMTP pour l'envoi d'email
         $mail->Host = 'smtp.gmail.com';  // Hôte SMTP de Gmail
         $mail->SMTPAuth = true;          // Activer l'authentification SMTP
-        $mail->Username = 'siyadiarra@gmail.com';  // Remplacer par votre adresse email Gmail
-        $mail->Password = 'Siyadiarra2003*';     // Utiliser un mot de passe d'application si l'authentification 2FA est activée
+        $mail->Username = 'votre_email@gmail.com';  // Remplacer par votre adresse email Gmail
+        $mail->Password = 'votre_mot_de_passe';     // Utiliser un mot de passe d'application si l'authentification 2FA est activée
         $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;  // Sécurisation de la connexion
         $mail->Port = 587;  // Port SMTP pour Gmail (587 pour TLS)
 
         // Expéditeur et destinataire
-        $mail->setFrom('siyadiarra@gmail.com', 'SAE502');  // L'email de l'expéditeur
-        $mail->addAddress($email, $fullname);  // L'email et le nom du destinataire
+        $mail->setFrom('votre_email@gmail.com', 'Nom de l\'expéditeur');  // Email de l'expéditeur
+        $mail->addAddress($email, $fullname);  // Email et nom du destinataire
 
         // Contenu de l'email
         $activation_link = "http://localhost:8080/activate.php?token=" . urlencode($activation_token);  // Lien d'activation à modifier si nécessaire
@@ -39,7 +39,7 @@ function sendConfirmationEmail($email, $fullname, $activation_token) {
                     <p>Si vous n'avez pas demandé à vous inscrire, veuillez ignorer ce message.</p>
                 </body>
             </html>
-        ";  // Corps de l'email avec lien d'activation
+        ";
 
         // Envoi de l'email
         if ($mail->send()) {
