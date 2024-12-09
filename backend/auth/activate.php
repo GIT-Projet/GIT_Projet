@@ -20,7 +20,7 @@ if (isset($_GET['token']) && !empty($_GET['token'])) {
     }
 
     // Rechercher le token dans la base de données
-    $stmt = $conn->prepare("SELECT id, email, activated FROM UserAccounts WHERE activation_token = ?");
+    $stmt = $conn->prepare("SELECT id, email FROM UserAccounts WHERE activation_token = ?");
     $stmt->bind_param("s", $token);
     $stmt->execute();
     $result = $stmt->get_result();
@@ -28,29 +28,18 @@ if (isset($_GET['token']) && !empty($_GET['token'])) {
     // Si le token est valide
     if ($result->num_rows > 0) {
         $user = $result->fetch_assoc();
-        
-        // Si l'utilisateur n'est pas déjà activé
-        if ($user['activated'] == 0) {
-            // Activer le compte de l'utilisateur
-            $stmt = $conn->prepare("UPDATE UserAccounts SET activated = 1 WHERE activation_token = ?");
-            $stmt->bind_param("s", $token);
-            $stmt->execute();
 
-            // Optionnel : Supprimer le token après activation
-            $stmt = $conn->prepare("UPDATE UserAccounts SET activation_token = NULL WHERE activation_token = ?");
-            $stmt->bind_param("s", $token);
-            $stmt->execute();
+        // Activer le compte de l'utilisateur en supprimant le token
+        $stmt = $conn->prepare("UPDATE UserAccounts SET activation_token = NULL WHERE activation_token = ?");
+        $stmt->bind_param("s", $token);
+        $stmt->execute();
 
-            // Message de succès
-            echo "<p>Votre compte a été activé avec succès ! Vous pouvez maintenant vous connecter.</p>";
+        // Message de succès
+        echo "<p>Votre compte a été activé avec succès ! Vous pouvez maintenant vous connecter.</p>";
 
-            // Vous pouvez rediriger l'utilisateur vers la page de connexion
-            header("Location: login.php");  // Redirige vers la page de connexion
-            exit();
-        } else {
-            // Si l'utilisateur est déjà activé
-            echo "<p>Votre compte est déjà activé.</p>";
-        }
+        // Rediriger l'utilisateur vers la page de connexion
+        header("Location: login.php");  // Redirige vers la page de connexion
+        exit();
     } else {
         // Si le token n'est pas valide
         echo "<p>Token invalide ou expiré.</p>";
