@@ -5,94 +5,268 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
     <title>Bienvenue sur notre site</title>
+    <!-- SweetAlert2 CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
     <style>
         body {
             font-family: 'Roboto', Arial, sans-serif;
-            background: linear-gradient(to bottom right, #6a11cb, #2575fc);
-            color: #ffffff;
-            text-align: center;
-            padding: 5% 10%;
             margin: 0;
-            height: 100vh;
+            padding: 0;
+            background: linear-gradient(to bottom right, #1e3c72, #2a5298);
+            color: #fff;
             display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* HEADER STYLING */
+        header {
+            background-color: #2a5298;
+            padding: 20px 0;
+            text-align: center;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        header h1 {
+            font-size: 3em;
+            color: white;
+            margin: 0;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        header nav {
+            margin-top: 10px;
+        }
+
+        header nav a {
+            color: white;
+            text-decoration: none;
+            margin: 0 15px;
+            font-size: 1.2em;
+            transition: color 0.3s ease;
+        }
+
+        header nav a:hover {
+            color: #3498db;
+        }
+
+        /* MAIN CONTENT */
+        .container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
-            background-attachment: fixed;
-            background-position: center;
-            background-size: cover;
-        }
-        .container {
-            max-width: 1200px;
-            width: 100%;
-            margin: 0 auto;
-            padding: 2em;
-            background: rgba(0, 0, 0, 0.5);
+            text-align: center;
+            padding: 5% 10%;
+            background: rgba(0, 0, 0, 0.6);
             border-radius: 15px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
             animation: fadeIn 1s ease-out;
+            margin-top: 80px;
         }
-        h1 {
-            font-size: 4em;
-            text-shadow: 4px 4px 10px rgba(0, 0, 0, 0.7);
+
+        .container h2 {
+            font-size: 3.5em;
             margin-bottom: 20px;
-            animation: fadeInText 2s ease-out;
+            text-shadow: 4px 4px 10px rgba(0, 0, 0, 0.7);
         }
-        p {
-            font-size: 1.8em;
+
+        .container p {
+            font-size: 1.6em;
             line-height: 1.6;
             margin-top: 20px;
             opacity: 0;
             animation: fadeInText 2s ease-out 0.5s forwards;
         }
-        .cta-button {
-            margin-top: 40px;
-            padding: 15px 40px;
-            background-color: #3498db;
-            color: #ffffff;
+
+        /* FOOTER STYLING */
+        footer {
+            background-color: #2a5298;
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+            margin-top: auto;
+        }
+
+        footer p {
+            font-size: 1.2em;
+            margin: 0;
+        }
+
+        footer a {
+            color: #fff;
+            text-decoration: none;
+            font-weight: bold;
+            margin-top: 10px;
+            display: block;
+            transition: color 0.3s ease;
+        }
+
+        footer a:hover {
+            color: #3498db;
+        }
+
+        /* Bouton de déconnexion en haut à droite */
+        .Btn {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            width: 45px;
+            height: 45px;
             border: none;
-            border-radius: 50px;
-            font-size: 1.5em;
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+            border-radius: 50%;
             cursor: pointer;
-            transition: all 0.3s ease;
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            overflow: hidden;
+            transition-duration: .3s;
+            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.199);
+            background-color: rgb(255, 65, 65);
+        }
+
+        .Btn .sign {
+            width: 100%;
+            transition-duration: .3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .Btn .sign svg {
+            width: 17px;
+        }
+
+        .Btn .sign svg path {
+            fill: white;
+        }
+
+        .Btn .text {
+            position: absolute;
+            right: 0%;
+            width: 0%;
             opacity: 0;
-            animation: fadeInText 2s ease-out 1s forwards;
+            color: white;
+            font-size: 1.2em;
+            font-weight: 600;
+            transition-duration: .3s;
         }
-        .cta-button:hover {
-            background-color: #2980b9;
-            transform: translateY(-3px);
-            box-shadow: 0 15px 25px rgba(0, 0, 0, 0.4);
+
+        /* hover effect on button width */
+        .Btn:hover {
+            width: 125px;
+            border-radius: 40px;
+            transition-duration: .3s;
         }
+
+        .Btn:hover .sign {
+            width: 30%;
+            transition-duration: .3s;
+            padding-left: 20px;
+        }
+
+        /* hover effect button's text */
+        .Btn:hover .text {
+            opacity: 1;
+            width: 70%;
+            transition-duration: .3s;
+            padding-right: 10px;
+        }
+
+        /* button click effect */
+        .Btn:active {
+            transform: translate(2px, 2px);
+        }
+
+        /* Keyframes for animations */
         @keyframes fadeIn {
             0% { opacity: 0; }
             100% { opacity: 1; }
         }
+
         @keyframes fadeInText {
             0% { opacity: 0; }
             100% { opacity: 1; }
         }
-        /* Style responsive */
+
+        /* Responsive Design */
         @media (max-width: 768px) {
-            h1 {
-                font-size: 3em;
+            header h1 {
+                font-size: 2.5em;
             }
-            p {
-                font-size: 1.4em;
+            .container h2 {
+                font-size: 2.8em;
             }
-            .cta-button {
-                font-size: 1.2em;
-                padding: 12px 30px;
+            .container p {
+                font-size: 1.3em;
+            }
+            .Btn {
+                width: 40px;
+                height: 40px;
+            }
+            .Btn:hover {
+                width: 100px;
+            }
+            .Btn:hover .text {
+                font-size: 1em;
             }
         }
     </style>
 </head>
 <body>
+
+    <!-- HEADER -->
+    <header>
+        <h1>Bienvenue chez Nous</h1>
+        <nav>
+            <a href="#">Accueil</a>
+            <a href="#">Produits</a>
+            <a href="#">Contact</a>
+            <a href="#">À propos</a>
+        </nav>
+    </header>
+
+    <!-- Bouton de déconnexion en haut à droite -->
+    <button class="Btn" onclick="logout()">
+        <div class="sign"><svg viewBox="0 0 512 512"><path d="M377.9 105.9L500.7 228.7c7.2 7.2 11.3 17.1 11.3 27.3s-4.1 20.1-11.3 27.3L377.9 406.1c-6.4 6.4-15 9.9-24 9.9c-18.7 0-33.9-15.2-33.9-33.9l0-62.1-128 0c-17.7 0-32-14.3-32-32l0-64c0-17.7 14.3-32 32-32l128 0 0-62.1c0-18.7 15.2-33.9 33.9-33.9c9 0 17.6 3.6 24 9.9zM160 96L96 96c-17.7 0-32 14.3-32 32l0 256c0 17.7 14.3 32 32 32l64 0c17.7 0 32 14.3 32 32s-14.3 32-32 32l-64 0c-53 0-96-43-96-96L0 128C0 75 43 32 96 32l64 0c17.7 0 32 14.3 32 32s-14.3 32-32 32z"></path></svg></div>
+        <div class="text">Ciao</div>
+    </button>
+
+    <!-- MAIN CONTENT -->
     <div class="container">
-        <h1>Bienvenue sur notre site !</h1>
-        <p>Nous sommes ravis de vous accueillir dans notre espace digital. Ici, chaque visite est une aventure et chaque clic vous ouvre la porte à de nouvelles opportunités.</p>
-        <p>Rejoignez notre communauté passionnée, échangez, apprenez, et faites partie de quelque chose de vraiment spécial. Ensemble, faisons un pas vers l'avenir !</p>
-        <form action="/frontend/login.html" method="POST" style="display: inline;">
-            <button type="submit" class="cta-button"> Se déconnecter</button>
-        </form>
+        <h2>Découvrez Nos Offres Spéciales !</h2>
+        <p>Nous vous offrons une expérience d'achat unique avec des produits de qualité, un service client exceptionnel et des offres exclusives pour chaque visiteur.</p>
     </div>
+
+    <!-- FOOTER -->
+    <footer>
+        <p>&copy; 2024 - Tous droits réservés</p>
+        <a href="#">Mentions légales</a>
+    </footer>
+
+    <!-- SweetAlert2 Script -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
+
+    <script>
+        // Fonction de déconnexion avec SweetAlert
+        function logout() {
+            Swal.fire({
+                title: 'Êtes-vous sûr?',
+                text: "Vous allez vous déconnecter.",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Oui, déconnecter!',
+                cancelButtonText: 'Annuler',
+                reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = 'login.html'; // Redirection vers la page de connexion
+                }
+            });
+        }
+    </script>
+
 </body>
 </html>

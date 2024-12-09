@@ -21,22 +21,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Vérification des champs obligatoires
     if (empty($fullname) || empty($email) || empty($username) || empty($password) || empty($confirm_password)) {
-        die("Veuillez remplir tous les champs.");
+        echo json_encode(["error" => "Veuillez remplir tous les champs."]);
+        exit();
     }
 
     // Vérification de la validité de l'adresse e-mail
     if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-        die("Adresse e-mail invalide.");
+        echo json_encode(["error" => "Adresse e-mail invalide."]);
+        exit();
     }
 
     // Vérifier la correspondance des mots de passe
     if ($password !== $confirm_password) {
-        die("Les mots de passe ne correspondent pas.");
+        echo json_encode(["error" => "Les mots de passe ne correspondent pas."]);
+        exit();
     }
 
     // Vérification de la force du mot de passe
     if (!preg_match('/^(?=.*[A-Z])(?=.*\d).{8,}$/', $password)) {
-        die("Le mot de passe doit contenir au moins 8 caractères, une majuscule et un chiffre.");
+        echo json_encode(["error" => "Le mot de passe doit contenir au moins 8 caractères, une majuscule et un chiffre."]);
+        exit();
     }
 
     // Hashage du mot de passe
@@ -47,7 +51,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Vérifier la connexion
     if ($conn->connect_error) {
-        die("Erreur de connexion : " . $conn->connect_error);
+        echo json_encode(["error" => "Erreur de connexion : " . $conn->connect_error]);
+        exit();
     }
 
     // Préparer la requête SQL pour insérer un nouvel utilisateur
@@ -61,19 +66,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $_SESSION['fullname'] = $fullname;
 
         // Redirection vers home.php
-        header("Location: /frontend/login.html");
+        echo json_encode(["success" => "Inscription réussie."]);
         exit();
     } else {
         if ($stmt->errno === 1062) { // Code d'erreur pour doublons
-            die("Ce nom d'utilisateur ou cette adresse e-mail est déjà utilisé(e).");
+            echo json_encode(["error" => "Ce nom d'utilisateur ou cette adresse e-mail est déjà utilisé(e)."]);
+            exit();
         }
-        die("Erreur : " . $stmt->error);
+        echo json_encode(["error" => "Erreur : " . $stmt->error]);
+        exit();
     }
 
     // Fermer la connexion
     $stmt->close();
     $conn->close();
 } else {
-    die("Méthode HTTP non autorisée.");
+    echo json_encode(["error" => "Méthode HTTP non autorisée."]);
+    exit();
 }
 ?>
