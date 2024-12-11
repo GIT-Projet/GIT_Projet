@@ -3,7 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="style.css">
     <title>Bienvenue sur notre site</title>
     <!-- SweetAlert2 CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
@@ -25,6 +24,9 @@
             padding: 20px 0;
             text-align: center;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            width: 100%; /* S'assurer que le header occupe toute la largeur */
+            position: relative; /* Positionner le header correctement */
+            margin: 0; /* Supprimer tout éventuel espacement */
         }
 
         header h1 {
@@ -87,7 +89,9 @@
             color: white;
             padding: 20px 0;
             text-align: center;
-            margin-top: auto;
+            margin: 0; /* Supprimer tout espacement autour du footer */
+            width: 100%; /* S'assurer que le footer occupe toute la largeur */
+            position: relative; /* Positionnement par défaut */
         }
 
         footer p {

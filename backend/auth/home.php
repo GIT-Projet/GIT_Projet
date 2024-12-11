@@ -18,12 +18,11 @@ if (!isset($_SESSION['username'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="style.css">
     <title>Bienvenue, <?php echo htmlspecialchars($_SESSION['username']); ?>!</title>
     <style>
         body {
             font-family: 'Roboto', Arial, sans-serif;
-            background: linear-gradient(to bottom right, #1e3c72, #2a5298); /* Bleu similaire à celui de la page de registre */
+            background: linear-gradient(to bottom right, #1e3c72, #2a5298); 
             color: #fff;
             text-align: center;
             padding: 0;
