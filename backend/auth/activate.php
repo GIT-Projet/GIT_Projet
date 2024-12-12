@@ -1,55 +1,99 @@
-<?php
-// Démarrer la session
-session_start();
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Activation de compte</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(to bottom, #002244, #004488);
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
 
-// Inclure la configuration de la base de données
-require_once '../config/config.php'; // chemin de fichier de configuration
-require_once 'mail.php'; // Ajout du point-virgule ici
+        .container {
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 20px 40px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+            max-width: 400px;
+            width: 100%;
+            text-align: center;
+        }
 
-// Vérifier si le token est passé en paramètre via GET
-if (isset($_GET['token']) && !empty($_GET['token'])) {
-    // Récupérer le token
-    $token = $_GET['token'];
+        p {
+            font-size: 16px;
+            margin: 10px 0;
+        }
 
-    // Connexion à la base de données
-    $conn = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
+        .success {
+            color: #00ff00;
+        }
 
-    // Vérifier la connexion
-    if ($conn->connect_error) {
-        die("Erreur de connexion à la base de données : " . $conn->connect_error);
-    }
+        .error {
+            color: #ff0000;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <?php
+        // Démarrer la session
+        session_start();
 
-    // Rechercher le token dans la base de données
-    $stmt = $conn->prepare("SELECT id, email FROM UserAccounts WHERE activation_token = ?");
-    $stmt->bind_param("s", $token);
-    $stmt->execute();
-    $result = $stmt->get_result();
+        // Inclure la configuration de la base de données
+        require_once '../config/config.php';
+        require_once 'mail.php';
 
-    // Si le token est valide
-    if ($result->num_rows > 0) {
-        $user = $result->fetch_assoc();
+        // Vérifier si le token est passé en paramètre via GET
+        if (isset($_GET['token']) && !empty($_GET['token'])) {
+            // Récupérer le token
+            $token = $_GET['token'];
 
-        // Activer le compte de l'utilisateur en supprimant le token
-        $stmt = $conn->prepare("UPDATE UserAccounts SET activation_token = NULL WHERE activation_token = ?");
-        $stmt->bind_param("s", $token);
-        $stmt->execute();
+            // Connexion à la base de données
+            $conn = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
 
-        // Avant la redirection, ne rien afficher d'autre
-        // Rediriger après 3 secondes avec le message dans un header
-        header("refresh:3;url=login.php");  // Redirige vers la page de connexion après 3 secondes
+            // Vérifier la connexion
+            if ($conn->connect_error) {
+                die("<p class='error'>Erreur de connexion à la base de données : " . $conn->connect_error . "</p>");
+            }
 
-        // Affichage du message après avoir configuré les headers
-        echo "<p>Votre compte a été activé avec succès ! Vous allez être redirigé vers la page de connexion.</p>";
-        exit(); // Terminer le script après la redirection
-    } else {
-        // Si le token n'est pas valide
-        echo "<p>Token invalide ou expiré.</p>";
-    }
+            // Rechercher le token dans la base de données
+            $stmt = $conn->prepare("SELECT id, email FROM UserAccounts WHERE activation_token = ?");
+            $stmt->bind_param("s", $token);
+            $stmt->execute();
+            $result = $stmt->get_result();
 
-    // Fermer la connexion
-    $stmt->close();
-    $conn->close();
-} else {
-    echo "<p>Token manquant. Impossible d'activer le compte.</p>";
-}
-?>
+            // Si le token est valide
+            if ($result->num_rows > 0) {
+                $user = $result->fetch_assoc();
+
+                // Activer le compte de l'utilisateur en supprimant le token
+                $stmt = $conn->prepare("UPDATE UserAccounts SET activation_token = NULL WHERE activation_token = ?");
+                $stmt->bind_param("s", $token);
+                $stmt->execute();
+
+                // Avant la redirection, ne rien afficher d'autre
+                echo "<p class='success'>Votre compte a été activé avec succès ! Vous allez être redirigé vers la page de connexion.</p>";
+                header("refresh:3;url=login.php");  // Redirige vers la page de connexion après 3 secondes
+                exit();
+            } else {
+                // Si le token n'est pas valide
+                echo "<p class='error'>Token invalide ou expiré.</p>";
+            }
+
+            // Fermer la connexion
+            $stmt->close();
+            $conn->close();
+        } else {
+            echo "<p class='error'>Token manquant. Impossible d'activer le compte.</p>";
+        }
+        ?>
+    </div>
+</body>
+</html>
