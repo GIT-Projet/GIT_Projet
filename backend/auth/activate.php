@@ -1,3 +1,62 @@
+<?php
+// Activer l'affichage des erreurs
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
+// Démarrer la session en premier
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
+// Inclure la configuration de la base de données
+require_once '../config/config.php';
+require_once 'mail.php';
+
+// Désactiver temporairement la sortie HTML si nécessaire
+ob_start();
+
+// Vérifier si le token est passé en paramètre via GET
+if (isset($_GET['token']) && !empty($_GET['token'])) {
+    $token = $_GET['token'];
+
+    // Connexion à la base de données
+    $conn = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
+
+    if ($conn->connect_error) {
+        die("<p class='error'>Erreur de connexion à la base de données : " . $conn->connect_error . "</p>");
+    }
+
+    // Rechercher le token dans la base de données
+    $stmt = $conn->prepare("SELECT id, email FROM UserAccounts WHERE activation_token = ?");
+    $stmt->bind_param("s", $token);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    if ($result->num_rows > 0) {
+        $user = $result->fetch_assoc();
+
+        // Activer le compte de l'utilisateur
+        $stmt = $conn->prepare("UPDATE UserAccounts SET activation_token = NULL WHERE activation_token = ?");
+        $stmt->bind_param("s", $token);
+        $stmt->execute();
+
+        // Rediriger après 3 secondes
+        header("refresh:3;url=login.php");
+        echo "<p class='success'>Votre compte a été activé avec succès ! Vous allez être redirigé vers la page de connexion.</p>";
+    } else {
+        echo "<p class='error'>Token invalide ou expiré.</p>";
+    }
+
+    $stmt->close();
+    $conn->close();
+} else {
+    echo "<p class='error'>Token manquant. Impossible d'activer le compte.</p>";
+}
+
+// Envoyer tout le contenu et libérer le tampon
+ob_end_flush();
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -42,58 +101,7 @@
 </head>
 <body>
     <div class="container">
-        <?php
-        // Démarrer la session
-        session_start();
-
-        // Inclure la configuration de la base de données
-        require_once '../config/config.php';
-        require_once 'mail.php';
-
-        // Vérifier si le token est passé en paramètre via GET
-        if (isset($_GET['token']) && !empty($_GET['token'])) {
-            // Récupérer le token
-            $token = $_GET['token'];
-
-            // Connexion à la base de données
-            $conn = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
-
-            // Vérifier la connexion
-            if ($conn->connect_error) {
-                die("<p class='error'>Erreur de connexion à la base de données : " . $conn->connect_error . "</p>");
-            }
-
-            // Rechercher le token dans la base de données
-            $stmt = $conn->prepare("SELECT id, email FROM UserAccounts WHERE activation_token = ?");
-            $stmt->bind_param("s", $token);
-            $stmt->execute();
-            $result = $stmt->get_result();
-
-            // Si le token est valide
-            if ($result->num_rows > 0) {
-                $user = $result->fetch_assoc();
-
-                // Activer le compte de l'utilisateur en supprimant le token
-                $stmt = $conn->prepare("UPDATE UserAccounts SET activation_token = NULL WHERE activation_token = ?");
-                $stmt->bind_param("s", $token);
-                $stmt->execute();
-
-                // Avant la redirection, ne rien afficher d'autre
-                echo "<p class='success'>Votre compte a été activé avec succès ! Vous allez être redirigé vers la page de connexion.</p>";
-                header("refresh:3;url=login.php");  // Redirige vers la page de connexion après 3 secondes
-                exit();
-            } else {
-                // Si le token n'est pas valide
-                echo "<p class='error'>Token invalide ou expiré.</p>";
-            }
-
-            // Fermer la connexion
-            $stmt->close();
-            $conn->close();
-        } else {
-            echo "<p class='error'>Token manquant. Impossible d'activer le compte.</p>";
-        }
-        ?>
+        <!-- Le contenu PHP est affiché ici -->
     </div>
 </body>
 </html>
