@@ -56,19 +56,6 @@
             text-align: center;
         }
     </style>
-</head>
-<body>
-    <div class="container">
-        <h1>Inscription</h1>
-        <form method="POST" action="">
-            <input type="text" name="fullname" placeholder="Nom complet" required>
-            <input type="email" name="email" placeholder="Adresse e-mail" required>
-            <input type="text" name="username" placeholder="Nom d'utilisateur" required>
-            <input type="password" name="password" placeholder="Mot de passe" required>
-            <input type="password" name="confirm_password" placeholder="Confirmez le mot de passe" required>
-            <input type="submit" value="S'inscrire">
-        </form>
-    </div>
 </body>
 </html>
 
