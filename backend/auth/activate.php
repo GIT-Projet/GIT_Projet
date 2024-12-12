@@ -42,7 +42,7 @@ if (isset($_GET['token']) && !empty($_GET['token'])) {
         $stmt->execute();
 
         // Rediriger après 3 secondes
-        header("refresh:3;url=login.php");
+        header("refresh:3;url=home.php");
         echo "<p class='success'>Votre compte a été activé avec succès ! Vous allez être redirigé vers la page de connexion.</p>";
     } else {
         echo "<p class='error'>Token invalide ou expiré.</p>";
