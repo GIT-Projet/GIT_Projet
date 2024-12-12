@@ -1,7 +1,6 @@
-/* Styles généraux */
 body {
     font-family: Arial, sans-serif;
-    background: linear-gradient(to bottom right, #cce7ff, #0077b6); /* Fond amélioré vers un bleu agréable */
+    background-color: #87CEEB; /* Bleu ciel */
     margin: 0;
     padding: 0;
     display: flex;
@@ -10,6 +9,7 @@ body {
     height: 100vh;
     color: #333;
 }
+
 
 /* Conteneur du formulaire */
 .form-container {

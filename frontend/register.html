@@ -4,12 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Inscription</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="styles.css">
+    <!-- Ajouter SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
     <div class="form-container">
         <h2>Inscription</h2>
-        <form action="/backend/auth/register.php" method="POST">
+        <form id="registerForm" action="/backend/auth/register.php" method="POST">
             <!-- Nom complet -->
             <label for="fullname">Nom complet :</label>
             <input type="text" id="fullname" name="fullname" placeholder="Ex : Jean Dupont" required>
@@ -39,5 +41,44 @@
             Vous avez déjà un compte ? <a href="login.html">Connectez-vous</a>.
         </p>
     </div>
+
+    <script>
+        document.getElementById("registerForm").addEventListener("submit", function(event) {
+            event.preventDefault();  // Empêcher l'envoi immédiat du formulaire
+
+            const formData = new FormData(this);
+
+            // Utilisation de Fetch pour envoyer le formulaire à PHP
+            fetch(this.action, {
+                method: "POST",
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Succès',
+                        text: data.success,
+                    }).then(() => {
+                        window.location.href = '/frontend/login.html'; // Redirection vers la page de login
+                    });
+                } else if (data.error) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Erreur',
+                        text: data.error,
+                    });
+                }
+            })
+            .catch(error => {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Erreur',
+                    text: 'Ce nom utilisateur ou cette adresse e-mail est déjà utilisé(e).',
+                });
+            });
+        });
+    </script>
 </body>
 </html>
