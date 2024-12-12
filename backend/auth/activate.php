@@ -41,17 +41,16 @@ if (isset($_GET['token']) && !empty($_GET['token'])) {
         $stmt->bind_param("s", $token);
         $stmt->execute();
 
-        // Rediriger après 3 secondes
-        header("refresh:3;url=home.php");
-        echo "<p class='success'>Votre compte a été activé avec succès ! Vous allez être redirigé vers la page de connexion.</p>";
+        // Message de succès
+        $message = "<p class='success'>Votre compte a été activé avec succès !</p>";
     } else {
-        echo "<p class='error'>Token invalide ou expiré.</p>";
+        $message = "<p class='error'>Token invalide ou expiré.</p>";
     }
 
     $stmt->close();
     $conn->close();
 } else {
-    echo "<p class='error'>Token manquant. Impossible d'activer le compte.</p>";
+    $message = "<p class='error'>Token manquant. Impossible d'activer le compte.</p>";
 }
 
 // Envoyer tout le contenu et libérer le tampon
@@ -97,11 +96,31 @@ ob_end_flush();
         .error {
             color: #ff0000;
         }
+
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            margin-top: 20px;
+            background-color: #0066cc;
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        .btn:hover {
+            background-color: #0055aa;
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <!-- Le contenu PHP est affiché ici -->
+        <?php
+        // Afficher le message de succès ou d'erreur
+        echo $message;
+        ?>
+        <a href="home.php" class="btn">Aller à l'accueil</a>
     </div>
 </body>
 </html>
