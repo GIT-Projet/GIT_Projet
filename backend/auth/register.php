@@ -1,3 +1,19 @@
+<?php
+// Activer l'affichage des erreurs
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
+// Toujours démarrer la session en premier
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
+// Inclure les fichiers de configuration et de gestion des mails
+require_once '../config/config.php';
+require_once 'mail.php';
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -15,7 +31,6 @@
             align-items: center;
             height: 100vh;
         }
-
         .container {
             background-color: rgba(255, 255, 255, 0.1);
             border-radius: 10px;
@@ -24,12 +39,10 @@
             max-width: 400px;
             width: 100%;
         }
-
         h1 {
             text-align: center;
             margin-bottom: 20px;
         }
-
         input {
             width: 100%;
             padding: 10px;
@@ -38,7 +51,6 @@
             border-radius: 5px;
             outline: none;
         }
-
         input[type="submit"] {
             background-color: #0066cc;
             color: white;
@@ -46,31 +58,18 @@
             cursor: pointer;
             transition: background-color 0.3s;
         }
-
         input[type="submit"]:hover {
             background-color: #0055aa;
         }
-
         .error {
             color: red;
             text-align: center;
         }
     </style>
-</body>
+</head>
 </html>
 
 <?php
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
-
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
-
-require_once '../config/config.php';
-require_once 'mail.php';
-
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $fullname = htmlspecialchars(trim($_POST['fullname']));
     $email = htmlspecialchars(trim($_POST['email']));
@@ -90,7 +89,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         die("Les mots de passe ne correspondent pas.");
     }
 
-    if (!preg_match('/^(?=.*[A-Z])(?=.*\d).{8,}$/', $password)) {
+    if (!preg_match('/^(?=.*[A-Z])(?=.*\\d).{8,}$/', $password)) {
         die("Le mot de passe doit contenir au moins 8 caractères, une majuscule et un chiffre.");
     }
 
@@ -109,7 +108,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($stmt->execute()) {
         sendConfirmationEmail($email, $fullname, $activation_token);
 
-        // Aucun texte ou espace avant cette ligne
         $_SESSION['username'] = $username;
         $_SESSION['fullname'] = $fullname;
 
@@ -127,4 +125,3 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     die("Méthode HTTP non autorisée.");
 }
 ?>
-
