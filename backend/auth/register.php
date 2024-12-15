@@ -78,19 +78,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $confirm_password = $_POST['confirm_password'];
 
     if (empty($fullname) || empty($email) || empty($username) || empty($password) || empty($confirm_password)) {
-        die("Veuillez remplir tous les champs.");
+        echo json_encode(["error" => "Veuillez remplir tous les champs."]);
+        exit();
     }
 
     if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-        die("Adresse e-mail invalide.");
+        echo json_encode(["error" => "Adresse e-mail invalide."]);
+        exit();
     }
 
     if ($password !== $confirm_password) {
-        die("Les mots de passe ne correspondent pas.");
+        echo json_encode(["error" => "Les mots de passe ne correspondent pas."]);
+        exit();
     }
 
-    if (!preg_match('/^(?=.*[A-Z])(?=.*\\d).{8,}$/', $password)) {
-        die("Le mot de passe doit contenir au moins 8 caractères, une majuscule et un chiffre.");
+    // Vérification de la force du mot de passe
+    if (!preg_match('/^(?=.*[A-Z])(?=.*\d).{8,}$/', $password)) {
+        echo json_encode(["error" => "Le mot de passe doit contenir au moins 8 caractères, une majuscule et un chiffre."]);
+        exit();
     }
 
     $hashed_password = password_hash($password, PASSWORD_BCRYPT);
@@ -99,7 +104,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $conn = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
 
     if ($conn->connect_error) {
-        die("Erreur de connexion : " . $conn->connect_error);
+        echo json_encode(["error" => "Erreur de connexion : " . $conn->connect_error]);
+        exit();
     }
 
     $stmt = $conn->prepare("INSERT INTO UserAccounts (fullname, email, username, password, activation_token) VALUES (?, ?, ?, ?, ?)");
@@ -111,17 +117,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $_SESSION['username'] = $username;
         $_SESSION['fullname'] = $fullname;
 
+        // Redirection vers home.php
+        echo json_encode(["success" => "Inscription réussie."]);
         exit();
     } else {
-        if ($stmt->errno === 1062) {
-            die("Ce nom d'utilisateur ou cette adresse e-mail est déjà utilisé(e).");
+        if ($stmt->errno === 1062) { // Code d'erreur pour doublons
+            echo json_encode(["error" => "Ce nom d'utilisateur ou cette adresse e-mail est déjà utilisé(e)."]);
+            exit();
         }
-        die("Erreur : " . $stmt->error);
+        echo json_encode(["error" => "Erreur : " . $stmt->error]);
+        exit();
     }
 
     $stmt->close();
     $conn->close();
 } else {
-    die("Méthode HTTP non autorisée.");
+    echo json_encode(["error" => "Méthode HTTP non autorisée."]);
+    exit();
 }
 ?>

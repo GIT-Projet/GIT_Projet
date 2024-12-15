@@ -17,7 +17,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Vérification des champs obligatoires
     if (empty($username) || empty($password)) {
-        die("Veuillez remplir tous les champs.");
+        echo json_encode(["error" => "Veuillez remplir tous les champs."]);
+        exit();
     }
 
     // Connexion à la base de données
@@ -25,7 +26,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Vérifier la connexion
     if ($conn->connect_error) {
-        die("Erreur de connexion : " . $conn->connect_error);
+        echo json_encode(["error" => "Erreur de connexion : " . $conn->connect_error]);
+        exit();
     }
 
     // Préparer la requête SQL pour vérifier l'utilisateur
@@ -40,17 +42,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Stocker l'utilisateur dans la session
         $_SESSION['username'] = $username;
 
-        // Rediriger vers la page d'accueil après connexion
-        header("Location: /backend/auth/home.php");
+        // Réponse JSON pour succès
+        echo json_encode(["success" => "Connexion réussie."]);
         exit();
     } else {
-        echo "Nom d'utilisateur ou mot de passe incorrect.";
+        // Réponse JSON pour erreur
+        echo json_encode(["error" => "Nom d'utilisateur ou mot de passe incorrect."]);
+        exit();
     }
 
     // Fermer la connexion
     $stmt->close();
     $conn->close();
 } else {
-    die("Méthode HTTP non autorisée.");
+    echo json_encode(["error" => "Méthode HTTP non autorisée."]);
+    exit();
 }
 ?>
