@@ -4,7 +4,7 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
-// Démarrer la session en premier
+// Démarrer la session
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
@@ -13,51 +13,68 @@ if (session_status() === PHP_SESSION_NONE) {
 require_once '../config/config.php';
 require_once 'mail.php';
 
-// Désactiver temporairement la sortie HTML si nécessaire
-ob_start();
+$message = ""; // Initialiser le message
 
-// Vérifier si le token est passé en paramètre via GET
-if (isset($_GET['token']) && !empty($_GET['token'])) {
-    $token = $_GET['token'];
+try {
+    // Désactiver temporairement la sortie HTML si nécessaire
+    ob_start();
 
-    // Connexion à la base de données
-    $conn = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
+    // Vérifier si le token est présent dans l'URL
+    if (isset($_GET['token']) && !empty($_GET['token'])) {
+        $token = htmlspecialchars(trim($_GET['token']));
 
-    if ($conn->connect_error) {
-        die("<p class='error'>Erreur de connexion à la base de données : " . $conn->connect_error . "</p>");
-    }
+        // Connexion à la base de données
+        $conn = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
 
-    // Rechercher le token dans la base de données
-    $stmt = $conn->prepare("SELECT id, email FROM UserAccounts WHERE activation_token = ?");
-    $stmt->bind_param("s", $token);
-    $stmt->execute();
-    $result = $stmt->get_result();
+        if ($conn->connect_error) {
+            throw new Exception("Erreur de connexion : " . $conn->connect_error);
+        }
 
-    if ($result->num_rows > 0) {
-        $user = $result->fetch_assoc();
-
-        // Activer le compte de l'utilisateur
-        $stmt = $conn->prepare("UPDATE UserAccounts SET activation_token = NULL WHERE activation_token = ?");
+        // Vérifier si le token existe dans la base
+        $stmt = $conn->prepare("SELECT id, email FROM UserAccounts WHERE activation_token = ?");
         $stmt->bind_param("s", $token);
         $stmt->execute();
+        $result = $stmt->get_result();
 
-        // Message de succès
-        $message = "<p class='success'>Votre compte a été activé avec succès !</p>";
+        if ($result->num_rows > 0) {
+            $user = $result->fetch_assoc();
+
+            // Mettre à jour le compte (activation_token à NULL)
+            $stmt = $conn->prepare("UPDATE UserAccounts SET activation_token = NULL WHERE activation_token = ?");
+            $stmt->bind_param("s", $token);
+            $stmt->execute();
+
+            if ($stmt->affected_rows > 0) {
+                // Succès : Le compte a été activé
+                $message = "<p class='success'>Votre compte a été activé avec succès ! Vous pouvez maintenant vous connecter.</p>";
+            } else {
+                // Aucun changement (token déjà utilisé)
+                $message = "<p class='error'>Ce token a déjà été utilisé ou est invalide.</p>";
+            }
+        } else {
+            // Aucun utilisateur trouvé avec ce token
+            $message = "<p class='error'>Token invalide ou expiré.</p>";
+        }
+
+        $stmt->close();
+        $conn->close();
     } else {
-        $message = "<p class='error'>Token invalide ou expiré.</p>";
+        // Token manquant
+        $message = "<p class='error'>Token manquant. Impossible d'activer le compte.</p>";
     }
-
-    $stmt->close();
-    $conn->close();
-} else {
-    $message = "<p class='error'>Token manquant. Impossible d'activer le compte.</p>";
+} catch (Exception $e) {
+    // Gestion des erreurs internes
+    $message = "<p class='error'>Une erreur interne est survenue : " . $e->getMessage() . "</p>";
+} finally {
+    // Nettoyer le tampon pour éviter les sorties parasites
+    if (ob_get_length()) {
+        ob_end_clean();
+    }
 }
-
-// Envoyer tout le contenu et libérer le tampon
-ob_end_flush();
 ?>
+
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">

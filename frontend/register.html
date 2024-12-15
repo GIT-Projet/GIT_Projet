@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Inscription</title>
     <link rel="stylesheet" href="styles.css">
-    <!-- Ajouter SweetAlert2 -->
+    <!-- SweetAlert2 -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
@@ -31,6 +31,7 @@
             <!-- Confirmation du mot de passe -->
             <label for="confirm_password">Confirmer le mot de passe :</label>
             <input type="password" id="confirm_password" name="confirm_password" placeholder="Confirmez le mot de passe" required>
+            <small id="passwordError" style="color: red; display: none;">Les mots de passe ne correspondent pas.</small>
 
             <!-- Bouton d'inscription -->
             <button type="submit">S'inscrire</button>
@@ -42,18 +43,35 @@
         </p>
     </div>
 
+    <!-- Script pour la validation et l'envoi -->
     <script>
-        document.getElementById("registerForm").addEventListener("submit", function(event) {
-            event.preventDefault();  // Empêcher l'envoi immédiat du formulaire
+        const form = document.getElementById("registerForm");
 
+        form.addEventListener("submit", function(event) {
+            event.preventDefault(); // Empêcher l'envoi immédiat
+
+            const password = document.getElementById("password").value;
+            const confirmPassword = document.getElementById("confirm_password").value;
+            const passwordError = document.getElementById("passwordError");
+
+            // Réinitialiser le message d'erreur
+            passwordError.style.display = "none";
+
+            // Vérification locale : les mots de passe doivent correspondre
+            if (password !== confirmPassword) {
+                passwordError.style.display = "block";
+                return; // Arrêter ici si les mots de passe ne correspondent pas
+            }
+
+            // Préparer les données du formulaire
             const formData = new FormData(this);
 
-            // Utilisation de Fetch pour envoyer le formulaire à PHP
+            // Envoi via Fetch API
             fetch(this.action, {
                 method: "POST",
                 body: formData
             })
-            .then(response => response.json())
+            .then(response => response.json()) // Convertir la réponse en JSON
             .then(data => {
                 if (data.success) {
                     Swal.fire({
@@ -61,7 +79,7 @@
                         title: 'Succès',
                         text: data.success,
                     }).then(() => {
-                        window.location.href = '/frontend/login.html'; // Redirection vers la page de login
+                        window.location.href = 'login.html'; // Redirection après succès
                     });
                 } else if (data.error) {
                     Swal.fire({
@@ -72,10 +90,11 @@
                 }
             })
             .catch(error => {
+                console.error("Erreur :", error);
                 Swal.fire({
                     icon: 'error',
                     title: 'Erreur',
-                    text: 'Ce nom utilisateur ou cette adresse e-mail est déjà utilisé(e).',
+                    text: 'Une erreur est survenue. Veuillez réessayer.',
                 });
             });
         });

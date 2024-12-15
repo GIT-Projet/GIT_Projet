@@ -13,10 +13,11 @@ function sendConfirmationEmail($email, $fullname, $activation_token) {
         $mail->isSMTP();
         $mail->Host = 'smtp.gmail.com';
         $mail->SMTPAuth = true;
-        $mail->Username = 'sae462387@gmail.com'; // Remplacez par votre adresse email
-        $mail->Password = 'kjrv qhyp kxaf ykey'; // Remplacez par votre mot de passe d'application
+        $mail->Username = 'sae462387@gmail.com'; // Adresse e-mail
+        $mail->Password = 'kjrv qhyp kxaf ykey'; // Mot de passe d'application
         $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
         $mail->Port = 587;
+
         // Expéditeur et destinataire
         $mail->setFrom('siyadiarra@gmail.com', 'SAE502');
         $mail->addAddress($email, $fullname);
@@ -33,9 +34,10 @@ function sendConfirmationEmail($email, $fullname, $activation_token) {
 
         // Envoi de l'email
         $mail->send();
-        echo 'Un email de confirmation a été envoyé à votre adresse.';
+        return true; // Succès
     } catch (Exception $e) {
-        echo "Erreur lors de l'envoi : {$mail->ErrorInfo}";
+        error_log("Erreur d'envoi d'e-mail : {$mail->ErrorInfo}"); // Loguer l'erreur
+        return false; // Échec
     }
 }
 ?>
