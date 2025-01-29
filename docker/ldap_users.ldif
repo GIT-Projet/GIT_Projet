@@ -1,0 +1,24 @@
+dn: ou=internes,dc=sprint3,dc=com
+objectClass: organizationalUnit
+ou: internes
+
+dn: uid=interne1,ou=internes,dc=sprint3,dc=com
+objectClass: inetOrgPerson
+cn: Interne Un
+sn: Un
+uid: interne1
+userPassword: motdepasse1
+
+dn: uid=interne2,ou=internes,dc=sprint3,dc=com
+objectClass: inetOrgPerson
+cn: Interne Deux
+sn: Deux
+uid: interne2
+userPassword: motdepasse2
+
+dn: uid=interne3,ou=internes,dc=sprint3,dc=com
+objectClass: inetOrgPerson
+cn: Interne Trois
+sn: Trois
+uid: interne3
+userPassword: motdepasse3
