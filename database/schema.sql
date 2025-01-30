@@ -10,7 +10,7 @@ CREATE TABLE IF NOT EXISTS UserAccounts (
     email VARCHAR(100) NOT NULL UNIQUE,
     username VARCHAR(50) NOT NULL UNIQUE,
     password VARCHAR(255) NOT NULL,
-    activation_token VARCHAR(255) NOT NULL, -- Colonne pour le token d'activation
+    activation_token VARCHAR(255)  NULL, -- Colonne pour le token d'activation
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 

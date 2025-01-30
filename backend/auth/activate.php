@@ -31,7 +31,7 @@ try {
         }
 
         // Vérifier si le token existe dans la base
-        $stmt = $conn->prepare("SELECT id, email FROM UserAccounts WHERE activation_token = ?");
+        $stmt = $conn->prepare("SELECT id, email, activation_token FROM UserAccounts WHERE activation_token = ?");
         $stmt->bind_param("s", $token);
         $stmt->execute();
         $result = $stmt->get_result();
@@ -39,17 +39,23 @@ try {
         if ($result->num_rows > 0) {
             $user = $result->fetch_assoc();
 
-            // Mettre à jour le compte (activation_token à NULL)
-            $stmt = $conn->prepare("UPDATE UserAccounts SET activation_token = NULL WHERE activation_token = ?");
-            $stmt->bind_param("s", $token);
-            $stmt->execute();
+            // Vérifier si le token est déjà NULL
+            if ($user['activation_token'] !== NULL) {
+                // Mettre à jour le compte (activation_token à NULL)
+                $stmt = $conn->prepare("UPDATE UserAccounts SET activation_token = NULL WHERE activation_token = ?");
+                $stmt->bind_param("s", $token);
+                $stmt->execute();
 
-            if ($stmt->affected_rows > 0) {
-                // Succès : Le compte a été activé
-                $message = "<p class='success'>Votre compte a été activé avec succès ! Vous pouvez maintenant vous connecter.</p>";
+                if ($stmt->affected_rows > 0) {
+                    // Succès : Le compte a été activé
+                    $message = "<p class='success'>Votre compte a été activé avec succès ! Vous pouvez maintenant vous connecter.</p>";
+                } else {
+                    // Aucun changement (token déjà utilisé)
+                    $message = "<p class='error'>Ce token a déjà été utilisé ou est invalide.</p>";
+                }
             } else {
-                // Aucun changement (token déjà utilisé)
-                $message = "<p class='error'>Ce token a déjà été utilisé ou est invalide.</p>";
+                // Token déjà null (compte déjà activé)
+                $message = "<p class='error'>Votre compte a déjà été activé.</p>";
             }
         } else {
             // Aucun utilisateur trouvé avec ce token
