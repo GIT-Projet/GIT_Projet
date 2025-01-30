@@ -1,3 +1,5 @@
+version: '3.8'
+
 services:
   php:
     build:
@@ -38,6 +40,18 @@ services:
       - "8081:80"
     depends_on:
       - db
+    networks:
+      - app-network
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:latest
+    container_name: keycloak
+    environment:
+      - KEYCLOAK_ADMIN=admin  # Nom d'utilisateur admin pour Keycloak
+      - KEYCLOAK_ADMIN_PASSWORD=admin  # Mot de passe admin pour Keycloak
+    ports:
+      - "8082:8080"
+    command: start-dev  # Commande pour démarrer Keycloak en mode développement
     networks:
       - app-network
 
